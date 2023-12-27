@@ -6,7 +6,7 @@ This is useful, for example, for transparently decrypting files.
 ## Usage
 
 Create a source directory (e.g. `src`).
-Createa mountpoint (e.g. `dst`).
+Create a mountpoint (e.g. `dst`).
 
 A proof of concept example, that fully proxies files
 ```
