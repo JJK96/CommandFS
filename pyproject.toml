@@ -1,0 +1,17 @@
+[project]
+name = "CommandFS"
+version = "1.0"
+dependencies = [
+  "fusepy",
+]
+authors = [
+    { name = "Jan-Jaap Korpershoek" },
+]
+description = """A fuse filesystem that proxies all requests to a given directory, but pipes the contents of a file through a command on read.
+This is useful, for example, for transparently decrypting files."""
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["fuse", "gpg", "fuse-filesystem", "1password"]
+
+[project.scripts]
+command_fs = "command_fs:main"
