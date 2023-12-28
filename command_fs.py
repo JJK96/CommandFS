@@ -13,14 +13,14 @@ import subprocess
 
 
 class CachedRead:
-    def __init__(self, root, command):
+    def __init__(self, root, command, cache_timeout):
         self.root = root
         self.command = command.split(' ')
-        self.timeout = 10 #seconds
+        self.cache_timeout = cache_timeout
         self.cache = TLRUCache(ttu=self.my_ttu, timer=datetime.now, maxsize=100)
 
     def my_ttu(self, _key, value, now):
-        return now + timedelta(seconds=self.timeout)
+        return now + timedelta(seconds=self.cache_timeout)
 
     @cachedmethod(lambda self: self.cache)
     def read(self, path):
@@ -37,10 +37,10 @@ class CachedRead:
 
 class CommandFS(Operations):
 
-    def __init__(self, root, command):
+    def __init__(self, root, command, cache_timeout):
         self.root = realpath(root)
         print(self.root)
-        self.reader = CachedRead(self.root, command)
+        self.reader = CachedRead(self.root, command, cache_timeout)
 
     def __call__(self, op, path, *args):
         return super().__call__(op, self.root + path, *args)
@@ -85,10 +85,11 @@ def main():
     parser.add_argument("src")
     parser.add_argument("dst")
     parser.add_argument("command")
+    parser.add_argument("--cache-timeout", default=10, help="Timeout for the cache in seconds")
     args = parser.parse_args()
 
     # logging.basicConfig(level=logging.ERROR)
-    dradisfs = CommandFS(args.src, args.command)
+    dradisfs = CommandFS(args.src, args.command, args.cache_timeout)
     fuse = FUSE(dradisfs, args.dst, foreground=True, allow_other=True)
 
 if __name__ == '__main__':
