@@ -89,8 +89,8 @@ def main():
     args = parser.parse_args()
 
     # logging.basicConfig(level=logging.ERROR)
-    dradisfs = CommandFS(args.src, args.command, args.cache_timeout)
-    fuse = FUSE(dradisfs, args.dst, foreground=True, allow_other=True)
+    commandfs = CommandFS(args.src, args.command, args.cache_timeout)
+    fuse = FUSE(commandfs, args.dst, foreground=True, allow_other=True)
 
 if __name__ == '__main__':
     main()
